@@ -1,7 +1,7 @@
 package com.laktyushin.loyaltypoints;
 
 import com.laktyushin.loyaltypoints.controller.CustomerController;
-import com.laktyushin.loyaltypoints.controller.CustomerMapper;
+import com.laktyushin.loyaltypoints.service.CustomerMapper;
 import com.laktyushin.loyaltypoints.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

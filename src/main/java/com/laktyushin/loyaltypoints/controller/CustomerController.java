@@ -4,6 +4,7 @@ import com.laktyushin.loyaltypoints.dto.CustomerDTO;
 import com.laktyushin.loyaltypoints.enums.Roles;
 import com.laktyushin.loyaltypoints.model.Customer;
 import com.laktyushin.loyaltypoints.repository.CustomerRepository;
+import com.laktyushin.loyaltypoints.service.CustomerMapper;
 import com.laktyushin.loyaltypoints.utils.TokenUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -50,7 +51,6 @@ public class CustomerController {
             @ApiResponse(responseCode = "400", description = "Bad Request / Unauthenticated")})
     @GetMapping("/customer")
     public Flux<CustomerDTO> getAllCustomers(@Parameter(hidden = true) RequestEntity requestEntity) {
-        System.out.println(requestEntity);
         Roles role = TokenUtils.getRoleFromRequest(requestEntity);
         if (role != Roles.ADMIN) {
             return Flux.error(new HttpMessageNotReadableException("Forbidden: ".concat(role.toString())));
