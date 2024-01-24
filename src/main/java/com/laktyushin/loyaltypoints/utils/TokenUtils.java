@@ -7,7 +7,7 @@ import java.util.Base64;
 
 public final class TokenUtils {
 
-    public static Roles getRoleFromRequest(RequestEntity requestEntity) {
+    public static Roles getRoleFromRequest(RequestEntity<String> requestEntity) {
         if (!requestEntity.toString().contains("authorization:\"Bearer ")) {
             return Roles.UNREGISTERED;
         }

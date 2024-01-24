@@ -27,7 +27,6 @@ import java.math.BigDecimal;
 
 
 @RestController
-//@SecurityRequirement(name = "bearerAuth")
 @SecurityScheme(
         name = "Bearer Authentication",
         type = SecuritySchemeType.HTTP,
@@ -50,7 +49,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "200", description = "get All Customers"),
             @ApiResponse(responseCode = "400", description = "Bad Request / Unauthenticated")})
     @GetMapping("/customer")
-    public Flux<CustomerDTO> getAllCustomers(@Parameter(hidden = true) RequestEntity requestEntity) {
+    public Flux<CustomerDTO> getAllCustomers(@Parameter(hidden = true) RequestEntity<String> requestEntity) {
         Roles role = TokenUtils.getRoleFromRequest(requestEntity);
         if (role != Roles.ADMIN) {
             return Flux.error(new HttpMessageNotReadableException("Forbidden: ".concat(role.toString())));
@@ -66,7 +65,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "200", description = "create Customer"),
             @ApiResponse(responseCode = "400", description = "Bad Request / Unauthenticated")})
     public Mono<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO customerDTO,
-                                            @Parameter(hidden = true) RequestEntity requestEntity) {
+                                            @Parameter(hidden = true) RequestEntity<String> requestEntity) {
         Roles role = TokenUtils.getRoleFromRequest(requestEntity);
         if (role != Roles.ADMIN) {
             return Mono.error(new HttpMessageNotReadableException("Forbidden: ".concat(role.toString())));
@@ -87,7 +86,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "400", description = "Bad Request / Unauthenticated")})
     @GetMapping("/customer/{id}")
     public Mono<ResponseEntity<CustomerDTO>> getCustomerById(@PathVariable(value = "id") Long customerId,
-                                                             @Parameter(hidden = true) RequestEntity requestEntity) {
+                                                             @Parameter(hidden = true) RequestEntity<String> requestEntity) {
         Roles role = TokenUtils.getRoleFromRequest(requestEntity);
         if (role != Roles.ADMIN) {
             return Mono.error(new HttpMessageNotReadableException("Forbidden: ".concat(role.toString())));
@@ -105,7 +104,7 @@ public class CustomerController {
     @PutMapping("/customer/{id}")
     public Mono<ResponseEntity<CustomerDTO>> updateCustomer(@PathVariable(value = "id") Long customerId,
                                                             @Valid @RequestBody CustomerDTO customerDTO,
-                                                            @Parameter(hidden = true) RequestEntity requestEntity) {
+                                                            @Parameter(hidden = true) RequestEntity<String> requestEntity) {
         Roles role = TokenUtils.getRoleFromRequest(requestEntity);
         if (role == Roles.UNREGISTERED) {
             return Mono.error(new HttpMessageNotReadableException("Forbidden: ".concat(role.toString())));
@@ -121,7 +120,6 @@ public class CustomerController {
                             BigDecimal oldAmount = existingCustomer.getAmount();
                             BigDecimal newAmount = customerMapper.toEntity(customerDTO).getAmount();
                             if ((newAmount.compareTo(oldAmount) > 0) && (role == Roles.COMMON_BUSINESS)) {
-                                //return Mono.error(new HttpMessageNotReadableException("Not allowed to award points: ".concat(customerDTO.getAmount().toString())));
                                 return Mono.error(new HttpMessageNotReadableException("Not allowed to award points: ".concat(customerDTO.getAmount().toString())));
                             }
                             existingCustomer
@@ -143,7 +141,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "400", description = "Bad Request / Unauthenticated")})
     @DeleteMapping("/customer/{id}")
     public Mono<ResponseEntity<Void>> deleteCustomer(@PathVariable(value = "id") Long customerId,
-                                                     @Parameter(hidden = true) RequestEntity requestEntity) {
+                                                     @Parameter(hidden = true) RequestEntity<String> requestEntity) {
         Roles role = TokenUtils.getRoleFromRequest(requestEntity);
         if (role != Roles.ADMIN) {
             return Mono.error(new HttpMessageNotReadableException("Forbidden: ".concat(role.toString())));

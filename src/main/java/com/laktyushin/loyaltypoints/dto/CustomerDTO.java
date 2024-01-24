@@ -11,7 +11,7 @@ public class CustomerDTO {
 	private String lastName;
 	private BigDecimal amount;
 
-	public Long getId() {
+	public Long getId() {			// spring does use it
 		return id;
 	}
 
